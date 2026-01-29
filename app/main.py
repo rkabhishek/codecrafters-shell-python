@@ -3,9 +3,16 @@ import sys
 def main():
     # TODO: Uncomment the code below to pass the first stage
     while True:
-        print("$ ", end="", flush=True)
-        cmd = input()
-        print(f"{cmd}: command not found")
+        try:
+            print("$ ", end="", flush=True)
+            cmd = input()
+            print(f"{cmd}: command not found")
+        except KeyboardInterrupt:
+            print()
+            continue
+        except EOFError:
+            print()
+            break
 
 
 
