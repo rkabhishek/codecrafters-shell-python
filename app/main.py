@@ -6,7 +6,10 @@ def main():
         try:
             print("$ ", end="", flush=True)
             cmd = input()
-            print(f"{cmd}: command not found")
+            if cmd == "exit":
+                break
+            else:
+                print(f"{cmd}: command not found")
         except KeyboardInterrupt:
             print()
             continue
