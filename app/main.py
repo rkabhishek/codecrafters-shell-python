@@ -5,11 +5,14 @@ def main():
     while True:
         try:
             print("$ ", end="", flush=True)
-            cmd = input()
-            if cmd == "exit":
+            line = input().strip()
+            if line == "exit":
                 break
+            elif line.startswith("echo"):
+                cmd, args = line.split(maxsplit=1) if " " in line else (line, "")
+                print(args)
             else:
-                print(f"{cmd}: command not found")
+                print(f"{line}: command not found")
         except KeyboardInterrupt:
             print()
             continue
