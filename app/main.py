@@ -1,4 +1,8 @@
-import sys
+
+CMD_ECHO = "echo"
+CMD_EXIT = "exit"
+CMD_TYPE = "type"
+BUILTINS = [CMD_ECHO, CMD_EXIT, CMD_TYPE]
 
 def main():
     # TODO: Uncomment the code below to pass the first stage
@@ -6,12 +10,19 @@ def main():
         try:
             print("$ ", end="", flush=True)
             line = input().strip()
-            if line == "exit":
+            if line == CMD_EXIT:
                 break
-            elif line.startswith("echo"):
+            elif line.startswith(CMD_ECHO):
                 cmd, *rest = line.split(maxsplit=1)
                 args = rest[0] if rest else ""
                 print(args)
+            elif line.startswith(CMD_TYPE):
+                cmd, *rest = line.split(maxsplit=1)
+                args = rest[0] if rest else ""
+                if args in BUILTINS:
+                    print(f"{args} is a shell builtin")
+                else:
+                    print(f"{args}: not found")
             else:
                 print(f"{line}: command not found")
         except KeyboardInterrupt:
