@@ -9,7 +9,8 @@ def main():
             if line == "exit":
                 break
             elif line.startswith("echo"):
-                cmd, args = line.split(maxsplit=1) if " " in line else (line, "")
+                cmd, *rest = line.split(maxsplit=1)
+                args = rest[0] if rest else ""
                 print(args)
             else:
                 print(f"{line}: command not found")
