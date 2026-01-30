@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 CMD_ECHO = "echo"
 CMD_EXIT = "exit"
@@ -17,15 +18,25 @@ def search_path(file):
 
 
 def handle_type(args):
-    if args in BUILTINS:
-        print(f"{args} is a shell builtin")
-        return
+    for arg in args:
+        if arg in BUILTINS:
+            print(f"{arg} is a shell builtin")
+            return
 
-    full_path = search_path(args)
+        full_path = search_path(arg)
+        if full_path:
+            print(f"{arg} is {full_path}")
+        else:
+            print(f"{arg}: not found")
+
+def handle_external(cmd, args):
+    full_path = search_path(cmd)
+
     if full_path:
-        print(f"{args} is {full_path}")
+        subprocess.run([cmd, *args])
+
     else:
-        print(f"{args}: not found")
+        print(f"{cmd}: command not found")
 
 
 def main():
@@ -34,16 +45,17 @@ def main():
         try:
             print("$ ", end="", flush=True)
             line = input().strip()
-            cmd, *rest = line.split(maxsplit=1)
-            args = rest[0] if rest else ""
-            if line == CMD_EXIT:
+            cmd, *args = line.split()
+            if cmd == CMD_EXIT:
                 break
-            elif line.startswith(CMD_ECHO):
-                print(args)
-            elif line.startswith(CMD_TYPE):
+            elif cmd == CMD_ECHO:
+                print(*args)
+            elif cmd == CMD_TYPE:
                 handle_type(args)
             else:
-                print(f"{line}: command not found")
+                handle_external(cmd, args)
+
+
         except KeyboardInterrupt:
             print()
             continue
