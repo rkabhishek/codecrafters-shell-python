@@ -10,15 +10,13 @@ def main():
         try:
             print("$ ", end="", flush=True)
             line = input().strip()
+            cmd, *rest = line.split(maxsplit=1)
+            args = rest[0] if rest else ""
             if line == CMD_EXIT:
                 break
             elif line.startswith(CMD_ECHO):
-                cmd, *rest = line.split(maxsplit=1)
-                args = rest[0] if rest else ""
                 print(args)
             elif line.startswith(CMD_TYPE):
-                cmd, *rest = line.split(maxsplit=1)
-                args = rest[0] if rest else ""
                 if args in BUILTINS:
                     print(f"{args} is a shell builtin")
                 else:
