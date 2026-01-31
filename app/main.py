@@ -4,7 +4,8 @@ import subprocess
 CMD_ECHO = "echo"
 CMD_EXIT = "exit"
 CMD_TYPE = "type"
-BUILTINS = [CMD_ECHO, CMD_EXIT, CMD_TYPE]
+CMD_PWD = "pwd"
+BUILTINS = [CMD_ECHO, CMD_EXIT, CMD_TYPE, CMD_PWD]
 
 
 def search_path(file):
@@ -29,6 +30,12 @@ def handle_type(args):
         else:
             print(f"{arg}: not found")
 
+def handle_pwd(args):
+    if args:
+        print("pwd: too many arguments")
+    else:
+        print(os.getcwd())
+
 def handle_external(cmd, args):
     full_path = search_path(cmd)
 
@@ -51,6 +58,8 @@ def main():
                 print(*args)
             elif cmd == CMD_TYPE:
                 handle_type(args)
+            elif cmd == CMD_PWD:
+                handle_pwd(args)
             else:
                 handle_external(cmd, args)
 
