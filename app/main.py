@@ -33,8 +33,7 @@ def handle_external(cmd, args):
     full_path = search_path(cmd)
 
     if full_path:
-        subprocess.run([cmd, *args])
-
+        subprocess.run([cmd, *args], executable=full_path)
     else:
         print(f"{cmd}: command not found")
 
