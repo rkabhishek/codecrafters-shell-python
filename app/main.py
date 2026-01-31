@@ -5,7 +5,8 @@ CMD_ECHO = "echo"
 CMD_EXIT = "exit"
 CMD_TYPE = "type"
 CMD_PWD = "pwd"
-BUILTINS = [CMD_ECHO, CMD_EXIT, CMD_TYPE, CMD_PWD]
+CMD_CD = "cd"
+BUILTINS = [CMD_ECHO, CMD_EXIT, CMD_TYPE, CMD_PWD, CMD_CD]
 
 
 def search_path(file):
@@ -36,6 +37,23 @@ def handle_pwd(args):
     else:
         print(os.getcwd())
 
+def handle_cd(args):
+    if len(args) > 1:
+        print("cd: too many arguments")
+        return
+
+    if not args:
+       os.chdir(os.path.expanduser("~"))
+       return
+
+    directory = args[0]
+    if os.path.isdir(directory):
+        os.chdir(directory)
+    else:
+        print(f"cd: {directory}: No such file or directory")
+
+
+
 def handle_external(cmd, args):
     full_path = search_path(cmd)
 
@@ -60,6 +78,8 @@ def main():
                 handle_type(args)
             elif cmd == CMD_PWD:
                 handle_pwd(args)
+            elif cmd == CMD_CD:
+                handle_cd(args)
             else:
                 handle_external(cmd, args)
 
