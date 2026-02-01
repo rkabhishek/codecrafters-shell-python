@@ -42,16 +42,13 @@ def handle_cd(args):
         print("cd: too many arguments")
         return
 
-    if not args:
-       os.chdir(os.path.expanduser("~"))
-       return
+    directory = args[0] if args else "~"
+    directory = os.path.expanduser(directory)
 
-    directory = args[0]
     if os.path.isdir(directory):
         os.chdir(directory)
     else:
         print(f"cd: {directory}: No such file or directory")
-
 
 
 def handle_external(cmd, args):
