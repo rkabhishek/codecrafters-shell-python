@@ -7,7 +7,8 @@ CMD_TYPE = "type"
 CMD_PWD = "pwd"
 CMD_CD = "cd"
 NORMAL = "normal"
-SINGLE_QUOTE = "single_quote"
+SINGLE_QUOTES = "single_quotes"
+DOUBLE_QUOTES = "double_quotes"
 BUILTINS = [CMD_ECHO, CMD_EXIT, CMD_TYPE, CMD_PWD, CMD_CD]
 
 
@@ -73,7 +74,11 @@ def parse_input(line):
     for ch in line:
         if state == NORMAL:
             if ch == "'":
-                state = SINGLE_QUOTE
+                state = SINGLE_QUOTES
+                if not token_exists:
+                    token_exists = True
+            elif ch == '"':
+                state = DOUBLE_QUOTES
                 if not token_exists:
                     token_exists = True
             elif ch != " ":
@@ -87,8 +92,14 @@ def parse_input(line):
                 token_chars = []
                 token_exists = False
 
-        elif state == SINGLE_QUOTE:
+        elif state == SINGLE_QUOTES:
             if ch == "'":
+                state = NORMAL
+            else:
+                token_chars.append(ch)
+
+        elif state == DOUBLE_QUOTES:
+            if ch == '"':
                 state = NORMAL
             else:
                 token_chars.append(ch)
