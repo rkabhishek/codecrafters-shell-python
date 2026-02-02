@@ -6,6 +6,8 @@ CMD_EXIT = "exit"
 CMD_TYPE = "type"
 CMD_PWD = "pwd"
 CMD_CD = "cd"
+NORMAL = "normal"
+SINGLE_QUOTE = "single_quote"
 BUILTINS = [CMD_ECHO, CMD_EXIT, CMD_TYPE, CMD_PWD, CMD_CD]
 
 
@@ -31,11 +33,13 @@ def handle_type(args):
         else:
             print(f"{arg}: not found")
 
+
 def handle_pwd(args):
     if args:
         print("pwd: too many arguments")
     else:
         print(os.getcwd())
+
 
 def handle_cd(args):
     if len(args) > 1:
@@ -60,13 +64,42 @@ def handle_external(cmd, args):
         print(f"{cmd}: command not found")
 
 
+def parse_input(line):
+    #print(line)
+    state = NORMAL
+    args = []
+    token_chars = []
+
+    for ch in line:
+        if state == NORMAL:
+            if ch == "'":
+                state = SINGLE_QUOTE
+            elif ch != " ":
+                token_chars.append(ch)
+            elif ch == " " and token_chars:
+                token = "".join(token_chars)
+                args.append(token)
+                token_chars = []
+
+
+        elif state == SINGLE_QUOTE:
+            if ch == "'":
+                state = NORMAL
+            else:
+                token_chars.append(ch)
+
+    if token_chars:
+        args.append("".join(token_chars))
+
+    return args
+
+
 def main():
-    # TODO: Uncomment the code below to pass the first stage
     while True:
         try:
             print("$ ", end="", flush=True)
             line = input().strip()
-            cmd, *args = line.split()
+            cmd, *args = parse_input(line)
             if cmd == CMD_EXIT:
                 break
             elif cmd == CMD_ECHO:
@@ -79,7 +112,6 @@ def main():
                 handle_cd(args)
             else:
                 handle_external(cmd, args)
-
 
         except KeyboardInterrupt:
             print()
