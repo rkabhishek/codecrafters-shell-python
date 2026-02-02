@@ -116,6 +116,9 @@ def main():
         try:
             print("$ ", end="", flush=True)
             line = input().strip()
+            if not line:
+                continue
+
             cmd, *args = parse_input(line)
             if cmd == CMD_EXIT:
                 break
