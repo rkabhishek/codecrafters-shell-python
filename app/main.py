@@ -65,22 +65,27 @@ def handle_external(cmd, args):
 
 
 def parse_input(line):
-    #print(line)
     state = NORMAL
     args = []
     token_chars = []
+    token_exists = False
 
     for ch in line:
         if state == NORMAL:
             if ch == "'":
                 state = SINGLE_QUOTE
+                if not token_exists:
+                    token_exists = True
             elif ch != " ":
+                if not token_exists:
+                    token_exists = True
                 token_chars.append(ch)
-            elif ch == " " and token_chars:
+
+            elif ch == " " and token_exists:
                 token = "".join(token_chars)
                 args.append(token)
                 token_chars = []
-
+                token_exists = False
 
         elif state == SINGLE_QUOTE:
             if ch == "'":
@@ -88,8 +93,9 @@ def parse_input(line):
             else:
                 token_chars.append(ch)
 
-    if token_chars:
+    if token_exists:
         args.append("".join(token_chars))
+
 
     return args
 
